@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:with_app/pages/home_page.dart';
+import 'package:with_app/pages/login_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 import 'package:with_app/styles/styles.dart';
 
@@ -19,7 +20,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   Animation _animation;
 
   void checkLogin(){
-      Navigator.pushNamed(context, HomePage.id);
+      Navigator.pushNamed(context, LoginPage.id);
   }
 
   @override

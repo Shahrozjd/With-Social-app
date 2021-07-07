@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:with_app/pages/home_page.dart';
+import 'package:with_app/pages/login_page.dart';
+import 'package:with_app/pages/signup_page.dart';
 import 'package:with_app/pages/splash_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -14,12 +19,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.light().copyWith(
-        primaryColor: CustomColor.primaryColor
+        primaryColor: CustomColor.primaryColor,
+        textTheme: ThemeData.light().textTheme,
       ),
       initialRoute: SplashPage.id,
       routes: {
         HomePage.id: (context)=>HomePage(),
         SplashPage.id: (context)=>SplashPage(),
+        LoginPage.id:(context)=>LoginPage(),
+        SignUpPage.id:(context)=>SignUpPage(),
       },
     );
   }

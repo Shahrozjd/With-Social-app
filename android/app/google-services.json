@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "615442722938",
+    "project_id": "withappservice",
+    "storage_bucket": "withappservice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615442722938:android:37e19ece6c47a0ad378bc3",
+        "android_client_info": {
+          "package_name": "com.velcrof.with_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615442722938-30qg5h6mbui1lo3sbsdkj0ger5k0du6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLllSsGeN5pgCaOjRGGUvD822ssshSaBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615442722938-30qg5h6mbui1lo3sbsdkj0ger5k0du6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

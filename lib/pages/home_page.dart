@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text("With",style: GoogleFonts.mPlusRounded1c(fontSize: 50,color: CustomColor.primaryColor),)
+
             ],
           ),
         ),
