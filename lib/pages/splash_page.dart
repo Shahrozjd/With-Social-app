@@ -9,18 +9,18 @@ import 'package:with_app/styles/styles.dart';
 
 class SplashPage extends StatefulWidget {
   static const String id = 'splash_page';
+
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
-
   //Your animation controller
   AnimationController _controller;
   Animation _animation;
 
-  void checkLogin(){
-      Navigator.pushNamed(context, LoginPage.id);
+  void checkLogin() {
+    Navigator.pushNamed(context, LoginPage.id);
   }
 
   @override
@@ -36,9 +36,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       end: 1.0,
     ).animate(_controller);
 
-    Timer(
-        Duration(milliseconds: 2500),
-            () => checkLogin());
+    Timer(Duration(milliseconds: 2500), () => checkLogin());
 
     super.initState();
   }
@@ -60,11 +58,29 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         ),
         child: Center(
             child: FadeTransition(
-              //Use your animation here
-              opacity: _animation,
-              child: SizedBox(child: Text("With",style: GoogleFonts.mPlusRounded1c(fontSize: Styles.width(context) * 0.3,color: Colors.white),))
-            )
-        ),
+                //Use your animation here
+                opacity: _animation,
+                child: SizedBox(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Hero(
+                        tag: "tagImg",
+                        child: Image.asset(
+                          "images/branch_leaves.png",
+                          height: Styles.height(context) * 0.2,
+                        )),
+                    SizedBox(
+                      width: Styles.width(context) * 0.02,
+                    ),
+                    Text(
+                      "With",
+                      style: GoogleFonts.mPlusRounded1c(
+                          fontSize: Styles.width(context) * 0.25,
+                          color: Colors.white),
+                    ),
+                  ],
+                )))),
       ),
     );
   }

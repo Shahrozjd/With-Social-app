@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomColor{
-  static const Color primaryColor = Color(0xFF303F9F);
-  static const Color secColor = Color(0xFF3F51B5);
+  static const Color primaryColor = Color(0xFF0059D4);
+  static const Color secColor = Color(0xFF2D86FF);
 
   static var primaryGradient = LinearGradient(
     colors: [

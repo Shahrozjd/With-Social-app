@@ -10,9 +10,9 @@ class _CustomLoadingState extends State<CustomLoading> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SpinKitDoubleBounce(
-        color: Colors.blue,
-        size: 50.0,
+      child: SpinKitThreeBounce(
+        color: Colors.white,
+        size: 30.0,
         controller: AnimationController(
             vsync: this,
             duration: const Duration(milliseconds: 1200)),
