@@ -29,194 +29,191 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Stack(
-          children: [
-            Container(
-              height: Styles.height(context),
-              width: Styles.width(context),
-              color: CustomColor.primaryColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Hero(
-                    tag: 'tagClip',
-                    child: ClipPath(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 35, left: 10, right: 10),
-                        height: Styles.height(context) * 0.30,
-                        decoration: BoxDecoration(
-                          color: CustomColor.secColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              blurRadius: 1,
-                              spreadRadius: 10,
-                              offset: Offset(0,3),
-                            )
-                          ],
-                        ),
-                        child: SizedBox(
-                          width: 250.0,
-                          child: DefaultTextStyle(
-                            style: const TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            child: AnimatedTextKit(
-                              animatedTexts: [
-                                FadeAnimatedText('Welcome',
-                                    textStyle: GoogleFonts.mPlusRounded1c(
-                                        fontSize: 40, color: Colors.white)),
-                                FadeAnimatedText('TO',
-                                    textStyle: GoogleFonts.mPlusRounded1c(
-                                        fontSize: 40, color: Colors.white)),
-                                FadeAnimatedText('With',
-                                    textStyle: GoogleFonts.mPlusRounded1c(
-                                        fontSize: 50, color: Colors.white)),
-                              ],
-                              repeatForever: true,
-                              pause: Duration(milliseconds: 200),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: CustomColor.primaryGradient
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          child: Stack(
+            children: [
+              Container(
+                height: Styles.height(context),
+                width: Styles.width(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Hero(
+                      tag: 'tagClip',
+                      child: ClipPath(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 35, left: 10, right: 10),
+                          height: Styles.height(context) * 0.30,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                          child: SizedBox(
+                            width: 250.0,
+                            child: DefaultTextStyle(
+                              style: const TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              child: AnimatedTextKit(
+                                animatedTexts: [
+                                  FadeAnimatedText('Welcome',
+                                      textStyle: GoogleFonts.mPlusRounded1c(
+                                          fontSize: 40, color: Colors.white)),
+                                  FadeAnimatedText('TO',
+                                      textStyle: GoogleFonts.mPlusRounded1c(
+                                          fontSize: 40, color: Colors.white)),
+                                  FadeAnimatedText('With',
+                                      textStyle: GoogleFonts.mPlusRounded1c(
+                                          fontSize: 50, color: Colors.white)),
+                                ],
+                                repeatForever: true,
+                                pause: Duration(milliseconds: 200),
+                              ),
                             ),
                           ),
                         ),
+                        clipper: CustomClipPath(),
                       ),
-                      clipper: CustomClipPath(),
                     ),
-                  ),
 
-                ],
-              ),
-            ),
-            // Align(
-            //   alignment: Alignment.topCenter,
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(top:100.0),
-            //     child: Image.asset("images/auth_vector.png",height: Styles.height(context) * 0.15,fit: BoxFit.fill,),
-            //   ),
-            // ),
-            Hero(
-              tag:"tagImg",
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Image.asset("images/branch_leaves.png",height: Styles.height(context) * 0.25,),
+                  ],
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: [
-                  Container(
-                    height: Styles.height(context) * 0.1,
+              // Align(
+              //   alignment: Alignment.topCenter,
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(top:100.0),
+              //     child: Image.asset("images/auth_vector.png",height: Styles.height(context) * 0.15,fit: BoxFit.fill,),
+              //   ),
+              // ),
+              Hero(
+                tag:"tagImg",
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Image.asset("assets/images/branch_leaves.png",height: Styles.height(context) * 0.25,),
                   ),
-                  Hero(
-                    tag: "tagCont",
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5))
-                            ]),
-                        margin: EdgeInsets.all(15),
-                        child: Wrap(
-                          children: [
-                            Text(
-                              "Login",
-                              style: cTextStyleMediumBoldAccent,
-                            ),
-                            CustomTextField(
-                              obscureText: false,
-                              hinText: "Enter your email",
-                              labelText: "Email",
-                              inputType: TextInputType.emailAddress,
-                              onChanged: (String getEmail) {
-                                _email = getEmail;
-                              },
-                              onEditingComplete: () {
-                                FocusScope.of(context).nextFocus();
-                              },
-                              textInputAction: TextInputAction.next,
-                            ),
-                            SizedBox(
-                              height: Styles.height(context) * 0.02,
-                            ),
-                            CustomTextField(
-                              obscureText: false,
-                              hinText: "Enter your Password",
-                              labelText: "Password",
-                              inputType: TextInputType.emailAddress,
-                              onChanged: (String getPass) {
-                                _pass = getPass;
-                              },
-                              onEditingComplete: () {
-                                FocusScope.of(context).nextFocus();
-                              },
-                              textInputAction: TextInputAction.next,
-                            ),
-                            SizedBox(
-                              height: Styles.height(context) * 0.1,
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: RoundRectButtonChild(
-                                child: isLoading
-                                    ? CustomLoading()
-                                    : Text(
-                                        'Sign In',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                backgroundColor: CustomColor.primaryColor,
-                                height: 40,
-                                onPress: () {
-                                  if (checkEmail(_email)) {
-                                    if (_email != null && _pass != null) {
-                                      userLogin();
-                                    }
-                                  } else {
-                                    Toaster.showToast(
-                                        "Invalid email address", ToastGravity.TOP);
-                                  }
-                                },
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    Container(
+                      height: Styles.height(context) * 0.1,
+                    ),
+                    Hero(
+                      tag: "tagCont",
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5))
+                              ]),
+                          margin: EdgeInsets.all(15),
+                          child: Wrap(
+                            children: [
+                              Text(
+                                "Login",
+                                style: cTextStyleMediumBoldAccent,
                               ),
-                            ),
-                            SizedBox(
-                              height: Styles.height(context) * 0.05,
-                            ),
-                          ],
+                              CustomTextField(
+                                obscureText: false,
+                                hinText: "Enter your email",
+                                labelText: "Email",
+                                inputType: TextInputType.emailAddress,
+                                onChanged: (String getEmail) {
+                                  _email = getEmail;
+                                },
+                                onEditingComplete: () {
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                textInputAction: TextInputAction.next,
+                              ),
+                              SizedBox(
+                                height: Styles.height(context) * 0.02,
+                              ),
+                              CustomTextField(
+                                obscureText: true,
+                                hinText: "Enter your Password",
+                                labelText: "Password",
+                                inputType: TextInputType.emailAddress,
+                                onChanged: (String getPass) {
+                                  _pass = getPass;
+                                },
+                                onEditingComplete: () {
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                textInputAction: TextInputAction.next,
+                              ),
+                              SizedBox(
+                                height: Styles.height(context) * 0.1,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: RoundRectButtonChild(
+                                  child: isLoading
+                                      ? CustomLoading()
+                                      : Text(
+                                          'Sign In',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                  backgroundColor: CustomColor.primaryColor,
+                                  height: 40,
+                                  onPress: () {
+                                    if (checkEmail(_email)) {
+                                      if (_email != null && _pass != null) {
+                                        userLogin();
+                                      }
+                                    } else {
+                                      Toaster.showToast(
+                                          "Invalid email address", ToastGravity.TOP);
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: Styles.height(context) * 0.05,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: Styles.height(context) * 0.01,
-                  ),
-                  RoundRectButtonCustom(
-                    text: 'Sign Up',
-                    height: 50,
-                    backgroundColor: Colors.white,
-                    foregroundColor: CustomColor.primaryColor,
-                    onPress: () {
-                      Navigator.pushNamed(context, SignUpPage.id);
-                    },
-                  )
-                ],
+                    SizedBox(
+                      height: Styles.height(context) * 0.01,
+                    ),
+                    RoundRectButtonCustom(
+                      text: 'Sign Up',
+                      height: 50,
+                      backgroundColor: Colors.white,
+                      foregroundColor: CustomColor.primaryColor,
+                      onPress: () {
+                        Navigator.pushNamed(context, SignUpPage.id);
+                      },
+                    )
+                  ],
+                ),
               ),
-            ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );

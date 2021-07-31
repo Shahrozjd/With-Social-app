@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:with_app/pages/bottom_bar_page.dart';
 import 'package:with_app/pages/home_page.dart';
 import 'package:with_app/pages/login_page.dart';
 import 'package:with_app/styles/custom_color.dart';
@@ -18,9 +20,22 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   //Your animation controller
   AnimationController _controller;
   Animation _animation;
+  FirebaseAuth auth;
 
-  void checkLogin() {
-    Navigator.pushNamed(context, LoginPage.id);
+
+  Future<void> checkLogin() {
+    auth = FirebaseAuth.instance;
+    User loggedInUser;
+    final user = auth.currentUser;
+    if (user != null) {
+      loggedInUser = user;
+      if (loggedInUser.email != null) {
+        Navigator.pushReplacementNamed(context, BottomBarPage.id);
+      }
+    }
+    else {
+      Navigator.pushReplacementNamed(context, LoginPage.id);
+    }
   }
 
   @override
@@ -67,7 +82,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                     Hero(
                         tag: "tagImg",
                         child: Image.asset(
-                          "images/branch_leaves.png",
+                          "assets/images/branch_leaves.png",
                           height: Styles.height(context) * 0.2,
                         )),
                     SizedBox(

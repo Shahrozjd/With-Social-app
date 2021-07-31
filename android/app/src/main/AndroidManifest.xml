@@ -1,5 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.velcrof.with_app">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE" />
+
    <application
         android:label="with_app"
         android:icon="@mipmap/ic_launcher">
@@ -37,5 +46,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyAPbg38P7ZNBbCiyUpYCNVHiZe2pTAHY5c"/>
+
     </application>
 </manifest>
