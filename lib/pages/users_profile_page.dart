@@ -15,67 +15,56 @@ import 'package:with_app/pages/login_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 import 'package:with_app/styles/styles.dart';
 
-class ProfilePage extends StatefulWidget {
-  static const String id = 'ProfilePage';
+class UsersProfilePage extends StatefulWidget {
+  static const String id = 'UsersProfilePage';
+  String uid;
+
+  UsersProfilePage({this.uid});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _UsersProfilePageState createState() => _UsersProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _UsersProfilePageState extends State<UsersProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: CustomColor.secColor
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfilePage(),
-                ),
-              );
-            },
-            icon: Icon(
-              FontAwesome.edit,
-              color: CustomColor.primaryColor,
-            ),
-          )
-        ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        stream: FireCollection.userDoc().snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.uid)
+            .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           return Container(
             child: Stack(
               children: [
-                Hero(
-                  tag: 'imgTag',
-                  child: AnimatedContainer(
-                    height: Styles.height(context) * 0.7,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                        image: snapshot.data['image'] == 'n/a'
-                            ? AssetImage(
-                                "assets/images/upload_img.png",
-                              )
-                            : snapshot.data['image'] != null
-                                ? NetworkImage(snapshot.data['image'])
-                                : AssetImage(
-                                    "assets/images/upload_img.png",
-                                  ),
-                        fit: BoxFit.cover,
+                snapshot.data['image'] == 'n/a'
+                    ? Center(
+                        child: Icon(
+                          FontAwesome.user,
+                          size: 45,
+                        ),
+                      )
+                    : AnimatedContainer(
+                        height: Styles.height(context) * 0.7,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: NetworkImage(snapshot.data['image']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        duration: Duration(milliseconds: 1000),
                       ),
-                    ),
-                    duration: Duration(milliseconds: 1000),
-                  ),
-                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -113,21 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: cTextStyleMedium,
                             maxLines: 2,
                           ),
-                          RoundRectButtonCustom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            text: 'Logout',
-                            height: 40,
-                            onPress: () {
-                              FirebaseAuth.instance.signOut();
-                              pushNewScreen(
-                                context,
-                                screen: LoginPage(),
-                                withNavBar: false,
-                              );
-                              Navigator.pushReplacementNamed(context, LoginPage.id);
-                            },
-                          )
+
                         ],
                       ),
                     ),

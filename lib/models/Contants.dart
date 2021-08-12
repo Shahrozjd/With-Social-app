@@ -14,5 +14,8 @@ class FireCollection{
   static CollectionReference timelineCollection(){
     return FirebaseFirestore.instance.collection("timeline");
   }
+  static CollectionReference userCollection(){
+    return FirebaseFirestore.instance.collection("users");
+  }
 
 }

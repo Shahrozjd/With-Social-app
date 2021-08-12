@@ -319,6 +319,13 @@ class _SignUpPageState extends State<SignUpPage> {
           email: _email,
           password: _pass,
         );
+        try {
+          await newuser.user.sendEmailVerification();
+          Toaster.showToast('Verification email has been sent', ToastGravity.TOP);
+        } catch (e) {
+          print("An error occured while trying to send email        verification");
+          print(e.message);
+        }
         if (newuser != null) {
           setState(() {
             isLoading = false;
@@ -352,10 +359,12 @@ class _SignUpPageState extends State<SignUpPage> {
           'firstName': _fName,
           'lastName': _lName,
           'gender':_gender,
+          'image':'n/a',
+          'about':'n/a'
         })
         .then((value) {
       print('user data added successfully');
-      Navigator.pushReplacementNamed(context, BottomBarPage.id);
+      Navigator.pushReplacementNamed(context, LoginPage.id);
     })
         .catchError((e) => print('error saving user data'));
   }

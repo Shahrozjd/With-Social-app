@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:with_app/styles/custom_color.dart';
 
 class CustomLoading extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class _CustomLoadingState extends State<CustomLoading> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Center(
       child: SpinKitThreeBounce(
-        color: Colors.white,
+        color: CustomColor.secColor,
         size: 30.0,
         controller: AnimationController(
             vsync: this,

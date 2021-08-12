@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:with_app/components/bottom_modal_sheet.dart';
 import 'package:with_app/components/map_overlay.dart';
+import 'package:with_app/pages/network_player_widget.dart';
+import 'package:with_app/pages/users_profile_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 import 'package:location/location.dart';
 import 'package:with_app/styles/styles.dart';
@@ -29,6 +36,39 @@ class _HomePageState extends State<HomePage> {
   BitmapDescriptor pinLocationIcon;
   BitmapDescriptor postLocationIcon;
 
+  GlobalKey _globalKey = new GlobalKey();
+
+  Future<Uint8List> _capturePng() async {
+    try {
+      print('inside');
+      RenderRepaintBoundary boundary =
+          _globalKey.currentContext.findRenderObject();
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      var pngBytes = byteData.buffer.asUint8List();
+      var bs64 = base64Encode(pngBytes);
+      print(pngBytes);
+      print(bs64);
+      setState(() {});
+      return pngBytes;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget widgetToImage(BuildContext context) {
+    return ClipRRect(
+      key: _globalKey,
+      borderRadius: BorderRadius.circular(8.0),
+      child: Image.asset(
+        "assets/images/user_avatar.jpg",
+        height: 150.0,
+        width: 100.0,
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     // setState(() {
     //   _markers.add(testMarker);
     // });
-    getAllPosts();
+    getAllPosts(context);
   }
 
   void setCustomMapPin() async {
@@ -72,6 +112,12 @@ class _HomePageState extends State<HomePage> {
             ),
             MapOverlay(
               onRelocateTap: moveCameraToMyLocation,
+              refreshTap: () {
+                setState(() {
+                  _markers.clear();
+                });
+                getAllPosts(context);
+              },
             )
           ],
         ),
@@ -79,7 +125,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> getAllPosts() async {
+  Future<void> getAllPosts(BuildContext context) async {
     CollectionReference _documentRef =
         FirebaseFirestore.instance.collection("timeline");
     await _documentRef.get().then(
@@ -87,7 +133,7 @@ class _HomePageState extends State<HomePage> {
         if (ds != null) {
           ds.docs.forEach(
             (QueryDocumentSnapshot snapshot) {
-              initMarkers(snapshot, snapshot.id);
+              initMarkers(snapshot, snapshot.id, context);
             },
           );
         }
@@ -95,7 +141,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  initMarkers(doc, docId) {
+  initMarkers(doc, docId,BuildContext context) {
     double lat = doc['lat'];
     double lng = doc['lng'];
     LatLng postPosition = LatLng(lat, lng);
@@ -108,11 +154,13 @@ class _HomePageState extends State<HomePage> {
           : BitmapDescriptor.defaultMarker,
       onTap: () {
         bottomModalSheet(
-            height: Styles.height(context) * 0.7,
+            height: Styles.height(context) * 0.8,
             context: context,
             kChild: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
               ),
               child: Container(
                 padding: EdgeInsets.all(10),
@@ -123,29 +171,47 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          AnimatedContainer(
-                            height: 55.0,
-                            width: 55.0,
-                            child: Center(child: Icon(FontAwesome.user)),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.amber,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 5.0,
-                                    offset: Offset(3, 3),
-                                    spreadRadius: 1.0)
-                              ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UsersProfilePage(
+                                    uid: doc['userId'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: AnimatedContainer(
+                              height: 40.0,
+                              width: 40.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.amber,
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    doc['userImg'],
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 5.0,
+                                      offset: Offset(3, 3),
+                                      spreadRadius: 1.0)
+                                ],
+                              ),
+                              duration: Duration(milliseconds: 400),
                             ),
-                            duration: Duration(milliseconds: 400),
                           ),
                           SizedBox(
                             width: Styles.width(context) * 0.04,
                           ),
                           Expanded(
                             child: Text(
-                              "John Doe",
+                              doc['userName'],
                               style: cTextStyleBold,
                             ),
                           ),
@@ -153,18 +219,32 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      width: Styles.width(context) * 0.01,
+                    ),
+                    doc['desc'] != null
+                        ? AutoSizeText(
+                          doc['desc'].toString(),
+                          maxLines: 2,
+                        )
+                        : SizedBox(),
+                    SizedBox(
+                      width: Styles.width(context) * 0.01,
                     ),
                     Expanded(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                image: NetworkImage(doc['url']),
+                        child: doc['format'] == 'image'
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: NetworkImage(doc['url'])),
+                                  color: Colors.black,
+                                ),
                               )
-                            ),
-                        ),),
+                            : Container(
+                                color: Colors.black,
+                                child: NetworkPlayerWidget(
+                                  url: doc['url'],
+                                ),
+                              )),
                   ],
                 ),
               ),

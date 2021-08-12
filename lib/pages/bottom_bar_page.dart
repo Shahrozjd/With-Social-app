@@ -63,7 +63,7 @@ class PersistentBottomBarState extends State<BottomBarPage> {
       ),
       PersistentBottomNavBarItem(
         iconSize: 25,
-        icon: Icon(Icons.add),
+        icon: Icon(Icons.add,color: Colors.white,),
         // title: ("Account"),
         activeColorPrimary: CustomColor.secColor,
         inactiveColorPrimary: Colors.white,
@@ -103,7 +103,6 @@ class PersistentBottomBarState extends State<BottomBarPage> {
       decoration: NavBarDecoration(
         colorBehindNavBar: Colors.white,
       ),
-
       itemAnimationProperties: ItemAnimationProperties(
         // Navigation Bar's items animation properties.
         duration: Duration(milliseconds: 200),
@@ -115,7 +114,7 @@ class PersistentBottomBarState extends State<BottomBarPage> {
         curve: Curves.ease,
         duration: Duration(milliseconds: 200),
       ),
-      navBarStyle: NavBarStyle.style9, // Cho
+      navBarStyle: NavBarStyle.style17, // Cho
     );
   }
 }

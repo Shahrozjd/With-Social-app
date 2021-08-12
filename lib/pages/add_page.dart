@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:with_app/components/CustomTextField.dart';
 import 'package:with_app/components/bottom_modal_sheet.dart';
 import 'package:with_app/components/round_rect_button_child.dart';
 import 'package:with_app/components/toaster.dart';
@@ -25,8 +26,8 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  String imageName, imageUrl, _gender;
-  String videoName, videoUrl;
+  String imageName, imageUrl, _gender, videoName, videoUrl, fName, lName, userImg;
+  String desc;
   File getVideo;
   File getImage;
   bool isLoading = false;
@@ -34,17 +35,35 @@ class _AddPageState extends State<AddPage> {
     'everyone',
     'male',
     'female',
-    'other',
   ];
-
 
   Location location = Location();
   LocationData _currentPosition;
 
+  Future<void> getFirestoreData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await FireCollection.userDoc()
+        .get()
+        .then<dynamic>((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          fName = snapshot['firstName'];
+          lName = snapshot['lastName'];
+          userImg = snapshot['image'];
+          isLoading = false;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
+    getFirestoreData();
     Permission.storage.request();
     _gender = genderList[0];
+
     super.initState();
   }
 
@@ -60,94 +79,107 @@ class _AddPageState extends State<AddPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                    child: ContentCards(
-                  title: 'Add Video',
-                  imgPath: "assets/images/add_video_img.png",
-                  onpress: () {
-                    bottomModalSheet(
-                      height: Styles.height(context) * 0.3,
-                      context: context,
-                      kChild: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RoundRectButtonChild(
-                              height: 50,
-                              backgroundColor: Colors.grey[500],
-                              child: videoName == null
-                                  ? Text(
-                                "Upload Image",
-                                style: cTextStyleMedium,
-                              )
-                                  : Text(videoName, style: cTextStyleMedium),
-                              onPress: () {
-                                _videoFromGallery();
-                              },
-                            ),
-                            SizedBox(
-                              height: Styles.height(context) * 0.01,
-                            ),
-                            Container(
-                              height: Styles.height(context) * 0.1,
-                              decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: CupertinoPicker(
-                                magnification: 2,
-                                children: [
-                                  for (int i = 0; i < genderList.length; i++)
-                                    Text(
-                                      genderList[i],
-                                      style: cTextStyle,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                ],
-                                itemExtent: 20,
-                                onSelectedItemChanged: (int value) {
-                                  setState(() {
-                                    FocusScope.of(context).unfocus();
-                                    _gender = genderList[value];
-                                    print(_gender);
-                                  });
+                  child: ContentCards(
+                    title: 'Add Video',
+                    imgPath: "assets/images/add_video_img.png",
+                    onpress: () {
+                      bottomModalSheet(
+                        height: Styles.height(context) * 0.5,
+                        context: context,
+                        kChild: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RoundRectButtonChild(
+                                height: 50,
+                                backgroundColor: Colors.grey[500],
+                                child: videoName == null
+                                    ? Text(
+                                        "Upload Video",
+                                        style: cTextStyleMedium,
+                                      )
+                                    : Text(videoName, style: cTextStyleMedium),
+                                onPress: () {
+                                  _videoFromGallery();
                                 },
                               ),
-                            ),
-                            SizedBox(
-                              height: Styles.height(context) * 0.01,
-                            ),
-                            RoundRectButtonChild(
-                              height: 50,
-                              backgroundColor: CustomColor.primaryColor,
-                              child: Text(
-                                "Save",
-                                style: cTextStyleMedium,
+                              SizedBox(
+                                height: Styles.height(context) * 0.01,
                               ),
-                              onPress: () {
-                                if (_gender != null && videoName != null) {
-                                  Navigator.pop(context);
-                                  saveVideo();
-                                } else {
-                                  Toaster.showToast(
-                                      "Please add complete details",
-                                      ToastGravity.TOP);
-                                }
-                              },
-                            ),
-                          ],
+                              Container(
+                                height: Styles.height(context) * 0.1,
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: CupertinoPicker(
+                                  magnification: 2,
+                                  children: [
+                                    for (int i = 0; i < genderList.length; i++)
+                                      Text(
+                                        genderList[i],
+                                        style: cTextStyle,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                  ],
+                                  itemExtent: 20,
+                                  onSelectedItemChanged: (int value) {
+                                    setState(() {
+                                      FocusScope.of(context).unfocus();
+                                      _gender = genderList[value];
+                                      print(_gender);
+                                    });
+                                  },
+                                ),
+                              ),
+                              CustomTextField(
+                                obscureText: false,
+                                labelText: 'Description',
+                                hinText: 'Add Something',
+                                onChanged: (String getDesc) {
+                                  desc = getDesc;
+                                },
+                                onEditingComplete: () {
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                textInputAction: TextInputAction.next,
+                              ),
+                              SizedBox(
+                                height: Styles.height(context) * 0.01,
+                              ),
+                              RoundRectButtonChild(
+                                height: 50,
+                                backgroundColor: CustomColor.primaryColor,
+                                child: Text(
+                                  "Save",
+                                  style: cTextStyleMedium,
+                                ),
+                                onPress: () {
+                                  if (_gender != null && videoName != null) {
+                                    Navigator.pop(context);
+                                    saveVideo();
+                                  } else {
+                                    Toaster.showToast(
+                                        "Please add complete details",
+                                        ToastGravity.TOP);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                )),
+                      );
+                    },
+                  ),
+                ),
                 Expanded(
                   child: ContentCards(
                     title: 'Add Image',
                     imgPath: "assets/images/add_photo_img.png",
                     onpress: () {
                       bottomModalSheet(
-                        height: Styles.height(context) * 0.3,
+                        height: Styles.height(context) * 0.5,
                         context: context,
                         kChild: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -195,6 +227,18 @@ class _AddPageState extends State<AddPage> {
                                     });
                                   },
                                 ),
+                              ),
+                              CustomTextField(
+                                obscureText: false,
+                                labelText: 'Description',
+                                hinText: 'Add Something',
+                                onChanged: (String getDesc) {
+                                  desc = getDesc;
+                                },
+                                onEditingComplete: () {
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                textInputAction: TextInputAction.next,
                               ),
                               SizedBox(
                                 height: Styles.height(context) * 0.01,
@@ -244,6 +288,7 @@ class _AddPageState extends State<AddPage> {
       imageName = filename;
     });
   }
+
   _videoFromGallery() async {
     FilePickerResult fileresult =
         await FilePicker.platform.pickFiles(type: FileType.video);
@@ -270,11 +315,12 @@ class _AddPageState extends State<AddPage> {
 
       videoUrl = await uploadVideo.ref.getDownloadURL();
       _currentPosition = await location.getLocation();
-      addPostToTimeline(videoUrl,"video");
+      addPostToTimeline(videoUrl, "video");
     } on Exception catch (e) {
       Toaster.showToast("Error", ToastGravity.TOP);
     }
   }
+
   Future<void> saveFiles() async {
     FocusScope.of(context).unfocus();
     setState(() {
@@ -288,7 +334,7 @@ class _AddPageState extends State<AddPage> {
 
       imageUrl = await uploadImage.ref.getDownloadURL();
       _currentPosition = await location.getLocation();
-      addPostToTimeline(imageUrl,"image");
+      addPostToTimeline(imageUrl, "image");
     } on Exception catch (e) {
       Toaster.showToast("Error", ToastGravity.TOP);
     }
@@ -302,9 +348,12 @@ class _AddPageState extends State<AddPage> {
       'url': url == null ? 'N/A' : url,
       'userId': FireCollection.userId,
       'timestamp': FieldValue.serverTimestamp(),
-      'lat':_currentPosition.latitude,
-      'lng':_currentPosition.longitude,
-      'format':format,
+      'lat': _currentPosition.latitude,
+      'lng': _currentPosition.longitude,
+      'format': format,
+      'desc': desc,
+      'userName':'$fName $lName',
+      'userImg':userImg,
     }).then((value) {
       setState(() {
         isLoading = false;

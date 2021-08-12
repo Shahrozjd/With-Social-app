@@ -8,10 +8,10 @@ import 'package:with_app/styles/styles.dart';
 
 
 class MapOverlay extends StatefulWidget {
-  VoidCallback onRelocateTap;
+  VoidCallback onRelocateTap, refreshTap;
   MapType currentMapType;
 
-  MapOverlay({this.onRelocateTap, this.currentMapType});
+  MapOverlay({this.onRelocateTap, this.currentMapType, this.refreshTap});
 
   @override
   _MapOverlayState createState() => _MapOverlayState();
@@ -35,41 +35,18 @@ class _MapOverlayState extends State<MapOverlay> {
                 Column(
                   children: [
                     IconButtons(
-                      iconData: Icons.search,
+                      iconData: Icons.refresh,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       ),
-                      onPress: () => print('Search is pressed'),
+                      onPress: widget.refreshTap,
                     ),
-                    IconButtons(
-                      iconData: Icons.map,
-                      borderRadius: BorderRadius.circular(0),
-                      onPress: () {
-                        bottomModalSheet(
-                          context: context,
-                          height: height * 0.3,
-                          kChild: Center(
-                            child: Column(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  'Choose Map Type',
-                                  style: cTextStyleMedium,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    // IconButtons(
+                    //   iconData: Icons.refresh,
+                    //   borderRadius: BorderRadius.circular(0),
+                    //   onPress: widget.refreshTap,
+                    // ),
                     IconButtons(
                         iconData: Icons.my_location_outlined,
                         borderRadius: BorderRadius.only(

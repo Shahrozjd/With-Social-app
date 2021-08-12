@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:with_app/pages/add_page.dart';
 import 'package:with_app/pages/bottom_bar_page.dart';
+import 'package:with_app/pages/edit_profile_page.dart';
 import 'package:with_app/pages/home_page.dart';
 import 'package:with_app/pages/login_page.dart';
 import 'package:with_app/pages/profile_page.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'With',
       theme: ThemeData.light().copyWith(
         primaryColor: CustomColor.primaryColor,
         textTheme: ThemeData.light().textTheme,
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         ProfilePage.id:(context)=>ProfilePage(),
         AddPage.id:(context)=>AddPage(),
         UserTimelinePage.id:(context)=>UserTimelinePage(),
+        EditProfilePage.id:(context)=>EditProfilePage(),
       },
     );
   }
