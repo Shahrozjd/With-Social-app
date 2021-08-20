@@ -7,6 +7,7 @@ import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:scroll_app_bar/scroll_app_bar.dart';
 import 'package:video_player/video_player.dart';
 import 'package:with_app/components/CustomTextField.dart';
@@ -59,11 +60,12 @@ class _TimelinePageState extends State<TimelinePage> {
 
   void _getUserLocation() async {
     var position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
 
     setState(() {
       userLat = position.latitude;
       userLng = position.longitude;
+      print("These are coordinates: $userLat $userLng");
     });
   }
 
@@ -78,8 +80,28 @@ class _TimelinePageState extends State<TimelinePage> {
     return distance;
   }
 
+  void getPermissions()async{
+    var permission = Permission.location;
+
+
+    var permissionStatus = await permission.request();
+
+    print("isGranted: " +
+        permissionStatus.isGranted.toString() +
+        " isDenied: " +
+        permissionStatus.isDenied.toString() +
+        " isLimited: " +
+        permissionStatus.isLimited.toString() +
+        " isRestricted: " +
+        permissionStatus.isRestricted.toString() +
+        " isPermanentlyDenied: " +
+        permissionStatus.isPermanentlyDenied.toString());
+  }
+
+
   @override
   void initState() {
+    getPermissions();
     _getUserLocation();
     getFirestoreData();
     super.initState();

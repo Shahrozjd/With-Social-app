@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:with_app/components/CustomTextField.dart';
 import 'package:with_app/components/custom_loading.dart';
 import 'package:with_app/components/round_rect_button.dart';
@@ -37,6 +38,30 @@ class _LoginPageState extends State<LoginPage> {
       return Future.value(false);
     }
     return Future.value(false);
+  }
+
+  void getPermissions()async{
+    var permission = Permission.location;
+
+
+    var permissionStatus = await permission.request();
+
+    print("isGranted: " +
+        permissionStatus.isGranted.toString() +
+        " isDenied: " +
+        permissionStatus.isDenied.toString() +
+        " isLimited: " +
+        permissionStatus.isLimited.toString() +
+        " isRestricted: " +
+        permissionStatus.isRestricted.toString() +
+        " isPermanentlyDenied: " +
+        permissionStatus.isPermanentlyDenied.toString());
+  }
+
+  @override
+  void initState() {
+    getPermissions();
+    super.initState();
   }
 
   @override

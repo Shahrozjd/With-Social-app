@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,7 +27,14 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  String imageName, imageUrl, _gender, videoName, videoUrl, fName, lName, userImg;
+  String imageName,
+      imageUrl,
+      _gender,
+      videoName,
+      videoUrl,
+      fName,
+      lName,
+      userImg;
   String desc;
   File getVideo;
   File getImage;
@@ -58,10 +66,32 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
+  void getPermissions() async {
+    var permission =
+        Platform.isAndroid ? Permission.storage : Permission.photos;
+
+    var permissionStatus = await permission.request();
+
+    if (permissionStatus.isPermanentlyDenied) {
+      Permission.photos.request();
+    }
+
+    print("isGranted: " +
+        permissionStatus.isGranted.toString() +
+        " isDenied: " +
+        permissionStatus.isDenied.toString() +
+        " isLimited: " +
+        permissionStatus.isLimited.toString() +
+        " isRestricted: " +
+        permissionStatus.isRestricted.toString() +
+        " isPermanentlyDenied: " +
+        permissionStatus.isPermanentlyDenied.toString());
+  }
+
   @override
   void initState() {
+    getPermissions();
     getFirestoreData();
-    Permission.storage.request();
     _gender = genderList[0];
 
     super.initState();
@@ -277,29 +307,33 @@ class _AddPageState extends State<AddPage> {
   }
 
   _imgFromGallery() async {
-    FilePickerResult fileresult =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-    File image = File(fileresult.files.first.path);
-    String filename = fileresult.files.first.name;
-    // saveFile(fileforfirebase, filename);
-    //
-    setState(() {
-      getImage = image;
-      imageName = filename;
-    });
+    final fileresult =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (fileresult != null) {
+      File image = File(fileresult.path);
+      String filename = "imagePost";
+      setState(() {
+        getImage = image;
+        imageName = filename;
+      });
+    } else {
+      print("User canceled the picker");
+    }
   }
 
   _videoFromGallery() async {
-    FilePickerResult fileresult =
-        await FilePicker.platform.pickFiles(type: FileType.video);
-    File video = File(fileresult.files.first.path);
-    String filename = fileresult.files.first.name;
-    // saveFile(fileforfirebase, filename);
-    //
-    setState(() {
-      getVideo = video;
-      videoName = filename;
-    });
+    final fileresult =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (fileresult != null) {
+      File video = File(fileresult.path);
+      String filename = "videoPost";
+      setState(() {
+        getVideo = video;
+        videoName = filename;
+      });
+    } else {
+      print("User canceled the picker");
+    }
   }
 
   Future<void> saveVideo() async {
@@ -352,8 +386,8 @@ class _AddPageState extends State<AddPage> {
       'lng': _currentPosition.longitude,
       'format': format,
       'desc': desc,
-      'userName':'$fName $lName',
-      'userImg':userImg,
+      'userName': '$fName $lName',
+      'userImg': userImg,
     }).then((value) {
       setState(() {
         isLoading = false;

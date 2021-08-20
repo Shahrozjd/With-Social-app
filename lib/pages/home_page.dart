@@ -6,16 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:geolocator/geolocator.dart' as geoLocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:with_app/components/bottom_modal_sheet.dart';
 import 'package:with_app/components/map_overlay.dart';
 import 'package:with_app/pages/network_player_widget.dart';
 import 'package:with_app/pages/users_profile_page.dart';
-import 'package:with_app/styles/custom_color.dart';
-import 'package:location/location.dart';
 import 'package:with_app/styles/styles.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,10 +67,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void getPermissions()async{
+    var permission = Permission.location;
+
+
+    var permissionStatus = await permission.request();
+
+    print("isGranted: " +
+        permissionStatus.isGranted.toString() +
+        " isDenied: " +
+        permissionStatus.isDenied.toString() +
+        " isLimited: " +
+        permissionStatus.isLimited.toString() +
+        " isRestricted: " +
+        permissionStatus.isRestricted.toString() +
+        " isPermanentlyDenied: " +
+        permissionStatus.isPermanentlyDenied.toString());
+  }
+
+
   @override
   void initState() {
     super.initState();
-    getLoc();
+    getPermissions();
+    _getUserLocation();
     setCustomMapPin();
     // Marker testMarker = Marker(
     //     position: LatLng(31.4940658,74.3736309),
@@ -280,31 +298,43 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  getLoc() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+  void _getUserLocation() async {
+    var position = await geoLocator.GeolocatorPlatform.instance
+        .getCurrentPosition(desiredAccuracy: geoLocator.LocationAccuracy.bestForNavigation);
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _currentPosition = await location.getLocation();
-
-    _initialCameraPosition =
-        LatLng(_currentPosition.latitude, _currentPosition.longitude);
-
-    moveCameraToMyLocation();
+    setState(() {
+      double userLat = position.latitude;
+      double userLng = position.longitude;
+      _initialCameraPosition = LatLng(userLat,userLng);
+      print("These are coordinates: $userLat $userLng");
+    });
   }
+
+  // getLoc() async {
+  //   bool _serviceEnabled;
+  //   PermissionStatus _permissionGranted;
+  //
+  //   _serviceEnabled = await location.serviceEnabled();
+  //   if (!_serviceEnabled) {
+  //     _serviceEnabled = await location.requestService();
+  //     if (!_serviceEnabled) {
+  //       return;
+  //     }
+  //   }
+  //
+  //   _permissionGranted = await location.hasPermission();
+  //   if (_permissionGranted == PermissionStatus.denied) {
+  //     _permissionGranted = await location.requestPermission();
+  //     if (_permissionGranted != PermissionStatus.granted) {
+  //       return;
+  //     }
+  //   }
+  //
+  //   _currentPosition = await location.getLocation();
+  //
+  //   _initialCameraPosition =
+  //       LatLng(_currentPosition.latitude, _currentPosition.longitude);
+  //
+  //   moveCameraToMyLocation();
+  // }
 }

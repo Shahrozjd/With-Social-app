@@ -48,6 +48,7 @@ dependencies:
   auto_size_text: ^2.1.0
   video_player: ^2.1.12
   geolocator: ^7.4.0
+  image_picker: ^0.8.1
 
 dev_dependencies:
   flutter_test:
