@@ -59,8 +59,8 @@ class _TimelinePageState extends State<TimelinePage> {
   }
 
   void _getUserLocation() async {
-    var position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+    var position = await GeolocatorPlatform.instance.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
 
     setState(() {
       userLat = position.latitude;
@@ -80,9 +80,8 @@ class _TimelinePageState extends State<TimelinePage> {
     return distance;
   }
 
-  void getPermissions()async{
+  void getPermissions() async {
     var permission = Permission.location;
-
 
     var permissionStatus = await permission.request();
 
@@ -97,7 +96,6 @@ class _TimelinePageState extends State<TimelinePage> {
         " isPermanentlyDenied: " +
         permissionStatus.isPermanentlyDenied.toString());
   }
-
 
   @override
   void initState() {
@@ -406,8 +404,9 @@ class _PostCardsState extends State<PostCards> {
     setState(
       () {
         userLoc = "${first.locality}, ${first.countryCode}";
-
       },
     );
   }
 }
+
+

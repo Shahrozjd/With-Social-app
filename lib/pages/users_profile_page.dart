@@ -31,9 +31,7 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: CustomColor.secColor
-        ),
+        iconTheme: IconThemeData(color: CustomColor.secColor),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -102,7 +100,14 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
                             style: cTextStyleMedium,
                             maxLines: 2,
                           ),
+                          snapshot.data['email']!= FirebaseAuth.instance.currentUser.email? RoundRectButtonCustom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            height: 40,
+                            text: "Add Friend",
+                            onPress: () {
 
+                            },
+                          ):SizedBox(),
                         ],
                       ),
                     ),

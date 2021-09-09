@@ -49,6 +49,8 @@ dependencies:
   video_player: ^2.1.12
   geolocator: ^7.4.0
   image_picker: ^0.8.1
+  flutter_signin_button: ^2.0.0
+  google_sign_in: ^5.1.0
 
 dev_dependencies:
   flutter_test:

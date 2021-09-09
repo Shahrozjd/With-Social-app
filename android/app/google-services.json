@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "615442722938-s7kjvl819i6rs2ac477e4dhsbdnq2slc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.velcrof.with_app",
+            "certificate_hash": "9a93737e71043dcb172df9895dc69ce4959a8048"
+          }
+        },
+        {
           "client_id": "615442722938-30qg5h6mbui1lo3sbsdkj0ger5k0du6f.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "615442722938-30qg5h6mbui1lo3sbsdkj0ger5k0du6f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "615442722938-4iutc64p7hen9ll8u38qmuv1fi0thk80.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.velcrof.withApp"
+              }
             }
           ]
         }
