@@ -52,7 +52,8 @@ class _AddPageState extends State<AddPage> {
     setState(() {
       isLoading = true;
     });
-    await FireCollection.userDoc()
+    await FireCollection()
+        .userDoc()
         .get()
         .then<dynamic>((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
@@ -380,7 +381,7 @@ class _AddPageState extends State<AddPage> {
     await fileRef.set({
       'type': _gender,
       'url': url == null ? 'N/A' : url,
-      'userId': FireCollection.userId,
+      'userId': FireCollection().userId,
       'timestamp': FieldValue.serverTimestamp(),
       'lat': _currentPosition.latitude,
       'lng': _currentPosition.longitude,

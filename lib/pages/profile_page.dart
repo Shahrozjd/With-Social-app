@@ -7,11 +7,13 @@ import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/octicons_icons.dart';
 import 'package:fluttericon/typicons_icons.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:with_app/components/round_rect_button_custom.dart';
 import 'package:with_app/models/Contants.dart';
 import 'package:with_app/pages/edit_profile_page.dart';
 import 'package:with_app/pages/login_page.dart';
+import 'package:with_app/pages/user_timeline_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 import 'package:with_app/styles/styles.dart';
 
@@ -42,13 +44,14 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             icon: Icon(
               FontAwesome.edit,
+              size: 35,
               color: CustomColor.primaryColor,
             ),
           )
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        stream: FireCollection.userDoc().snapshots(),
+        stream: FireCollection().userDoc().snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           return Container(
@@ -79,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: Styles.height(context) * 0.3,
+                    height: Styles.height(context) * 0.35,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -114,18 +117,34 @@ class _ProfilePageState extends State<ProfilePage> {
                             maxLines: 2,
                           ),
                           RoundRectButtonCustom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                            text: 'My Feed',
+                            height: 40,
+                            onPress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserTimelinePage(),
+                                ),
+                              );
+                            },
+                          ),
+                          RoundRectButtonCustom(
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
                             text: 'Logout',
                             height: 40,
                             onPress: () {
+                              GoogleSignIn().signOut();
                               FirebaseAuth.instance.signOut();
                               pushNewScreen(
                                 context,
                                 screen: LoginPage(),
                                 withNavBar: false,
                               );
-                              Navigator.pushReplacementNamed(context, LoginPage.id);
+                              Navigator.pushReplacementNamed(
+                                  context, LoginPage.id);
                             },
                           )
                         ],

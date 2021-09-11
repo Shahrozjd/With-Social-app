@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         primaryColor: CustomColor.primaryColor,
         textTheme: ThemeData.light().textTheme,
-        backgroundColor: Color(0xFFFAFAFA)
+        backgroundColor: Color(0xFFFAFAFA),
       ),
       initialRoute: SplashPage.id,
       routes: {

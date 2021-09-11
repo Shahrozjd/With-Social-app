@@ -43,7 +43,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> getFirestoreData() async {
-    await FireCollection.userDoc()
+    await FireCollection()
+        .userDoc()
         .get()
         .then<dynamic>((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
@@ -200,7 +201,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   text: "Save",
                   height: 40,
                   onPress: () {
-                      saveData();
+                    saveData();
                   },
                 ),
               ],
@@ -228,7 +229,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> saveFiles() async {
     FocusScope.of(context).unfocus();
     setState(() {
-
       isLoading = true;
       Toaster.showToast("Uploading", ToastGravity.TOP);
     });
@@ -254,10 +254,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() {
       isLoading = true;
     });
-    await FireCollection.userDoc().update({
+    await FireCollection().userDoc().update({
       'firstName': fNameController.text,
       'lastName': lNameController.text,
-      'about':aboutController.text,
+      'about': aboutController.text,
       'image': imageUrl,
       'gender': _gender,
     }).then((value) {

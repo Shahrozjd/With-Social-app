@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FireCollection{
 
-  static String userId = FirebaseAuth.instance.currentUser.uid;
+  String userId = FirebaseAuth.instance.currentUser.uid;
 
-  static DocumentReference userDoc(){
+  DocumentReference userDoc(){
     return FirebaseFirestore.instance.collection("users").doc(userId);
   }
   static DocumentReference timelineCollectionDoc(){

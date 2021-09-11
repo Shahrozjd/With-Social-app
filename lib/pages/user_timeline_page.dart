@@ -1,16 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scroll_app_bar/scroll_app_bar.dart';
-import 'package:video_player/video_player.dart';
 import 'package:with_app/components/bottom_modal_sheet.dart';
-import 'package:with_app/components/custom_loading.dart';
-import 'package:with_app/components/round_rect_button.dart';
 import 'package:with_app/components/round_rect_button_custom.dart';
 import 'package:with_app/components/toaster.dart';
 import 'package:with_app/models/Contants.dart';
@@ -42,7 +36,7 @@ class _UserTimelinePageState extends State<UserTimelinePage> {
         child: Container(
           child: StreamBuilder<QuerySnapshot>(
             stream: FireCollection.timelineCollection()
-                .where('userId', isEqualTo: FireCollection.userId)
+                .where('userId', isEqualTo: FireCollection().userId)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -184,8 +178,7 @@ class PostCards extends StatelessWidget {
                               onPress: () async {
                                 Navigator.pop(context);
                                 Toaster.showToast(
-                                    "Deleting Post...",
-                                    ToastGravity.TOP);
+                                    "Deleting Post...", ToastGravity.TOP);
                                 await FirebaseStorage.instance
                                     .refFromURL(imagePath)
                                     .delete();

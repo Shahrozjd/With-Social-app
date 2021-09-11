@@ -2,22 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
-import 'package:fluttericon/linecons_icons.dart';
-import 'package:fluttericon/octicons_icons.dart';
-import 'package:fluttericon/typicons_icons.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:with_app/components/round_rect_button_custom.dart';
 import 'package:with_app/models/Contants.dart';
-import 'package:with_app/pages/edit_profile_page.dart';
-import 'package:with_app/pages/login_page.dart';
 import 'package:with_app/styles/custom_color.dart';
 import 'package:with_app/styles/styles.dart';
 
 class UsersProfilePage extends StatefulWidget {
   static const String id = 'UsersProfilePage';
-  String uid;
+  final String uid;
 
   UsersProfilePage({this.uid});
 
@@ -26,6 +19,29 @@ class UsersProfilePage extends StatefulWidget {
 }
 
 class _UsersProfilePageState extends State<UsersProfilePage> {
+  bool isSent = false;
+
+  Future<void> checkRequestExist(String userId) {
+    CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection("users")
+        .doc(FireCollection().userId)
+        .collection("requests");
+
+    collectionReference.get().then<dynamic>((doc) {
+      if (doc != null) {
+        doc.docs.forEach(
+          (value) {
+            if (value['userId'] == userId) {
+              setState(() {
+                isSent = true;
+              });
+            }
+          },
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +58,7 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          checkRequestExist(snapshot.data.id);
           return Container(
             child: Stack(
               children: [
@@ -100,14 +117,18 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
                             style: cTextStyleMedium,
                             maxLines: 2,
                           ),
-                          snapshot.data['email']!= FirebaseAuth.instance.currentUser.email? RoundRectButtonCustom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            height: 40,
-                            text: "Add Friend",
-                            onPress: () {
-
-                            },
-                          ):SizedBox(),
+                          snapshot.data['email'] !=
+                                  FirebaseAuth.instance.currentUser.email
+                              ? RoundRectButtonCustom(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  height: 40,
+                                  text: isSent ? 'Request Sent' : "Add Friend",
+                                  onPress: () {
+                                    sendFriendRequest(snapshot.data.id);
+                                  },
+                                )
+                              : SizedBox(),
                         ],
                       ),
                     ),
@@ -119,5 +140,45 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
         },
       ),
     );
+  }
+
+  Future<void> sendFriendRequest(String firendId) async {
+    print("USERID" + FireCollection().userId);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firendId)
+        .collection('requests')
+        .doc()
+        .set(
+      {
+        'userId': FireCollection().userId,
+        'type': 'recieved',
+        'status': 'waiting',
+      },
+    ).then((value) {
+      print('Request sent');
+    }).catchError((e) {
+      print('Error sending request');
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FireCollection().userId)
+        .collection('requests')
+        .doc()
+        .set(
+      {
+        'userId': firendId,
+        'type': 'recieved',
+        'status': 'waiting',
+      },
+    ).then((value) {
+      setState(() {
+        isSent = true;
+      });
+      print('Request sent data saved');
+    }).catchError((e) {
+      print('Error saving sending request data');
+    });
   }
 }

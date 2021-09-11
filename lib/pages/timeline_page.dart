@@ -36,7 +36,8 @@ class _TimelinePageState extends State<TimelinePage> {
   double userLat, userLng;
 
   Future<void> getFirestoreData() async {
-    await FireCollection.userDoc()
+    await FireCollection()
+        .userDoc()
         .get()
         .then<dynamic>((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
@@ -108,7 +109,7 @@ class _TimelinePageState extends State<TimelinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[400],
+      backgroundColor: Colors.white,
       appBar: ScrollAppBar(
         controller: controller,
         title: Text(
@@ -408,5 +409,3 @@ class _PostCardsState extends State<PostCards> {
     );
   }
 }
-
-

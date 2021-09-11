@@ -25,7 +25,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  String _fName, _lName, _email, _pass, _cfmPass,_gender;
+  String _fName, _lName, _email, _pass, _cfmPass, _gender;
   bool isLoading = false;
   List<String> genderList = [
     'male',
@@ -42,9 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: CustomColor.primaryGradient
-      ),
+      decoration: BoxDecoration(gradient: CustomColor.primaryGradient),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
@@ -60,7 +58,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       tag: 'tagClip',
                       child: ClipPath(
                         child: Container(
-                          padding: EdgeInsets.only(top: 35, left: 10, right: 10),
+                          padding:
+                              EdgeInsets.only(top: 35, left: 10, right: 10),
                           height: Styles.height(context) * 0.18,
                           color: Colors.black.withOpacity(0.2),
                           child: SizedBox(
@@ -92,12 +91,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               Hero(
-                tag:"tagImg",
+                tag: "tagImg",
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Image.asset("assets/images/branch_leaves.png",height: Styles.height(context) * 0.15,),
+                    child: Image.asset(
+                      "assets/images/branch_leaves.png",
+                      height: Styles.height(context) * 0.15,
+                    ),
                   ),
                 ),
               ),
@@ -237,7 +239,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                   },
                                 ),
                               ),
-
                               SizedBox(
                                 height: Styles.height(context) * 0.1,
                               ),
@@ -247,9 +248,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   child: isLoading
                                       ? CustomLoading()
                                       : Text(
-                                    'Sign Up',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                          'Sign Up',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                   backgroundColor: CustomColor.primaryColor,
                                   height: 40,
                                   onPress: () {
@@ -263,15 +264,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                           userSignUp();
                                         } else {
                                           Toaster.showToast(
-                                              "Password did not match", ToastGravity.TOP);
+                                              "Password did not match",
+                                              ToastGravity.TOP);
                                         }
                                       } else {
                                         Toaster.showToast(
-                                            "Please fill all fields", ToastGravity.TOP);
+                                            "Please fill all fields",
+                                            ToastGravity.TOP);
                                       }
                                     } else {
-                                      Toaster.showToast(
-                                          "Invalid email address", ToastGravity.TOP);
+                                      Toaster.showToast("Invalid email address",
+                                          ToastGravity.TOP);
                                     }
                                   },
                                 ),
@@ -279,7 +282,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               SizedBox(
                                 height: Styles.height(context) * 0.05,
                               ),
-
                             ],
                           ),
                         ),
@@ -321,9 +323,11 @@ class _SignUpPageState extends State<SignUpPage> {
         );
         try {
           await newuser.user.sendEmailVerification();
-          Toaster.showToast('Verification email has been sent', ToastGravity.TOP);
+          Toaster.showToast(
+              'Verification email has been sent', ToastGravity.TOP);
         } catch (e) {
-          print("An error occured while trying to send email        verification");
+          print(
+              "An error occured while trying to send email        verification");
           print(e.message);
         }
         if (newuser != null) {
@@ -353,20 +357,17 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> addUserData() async {
-    await FireCollection.userDoc()
-        .set({
-          'email': _email,
-          'firstName': _fName,
-          'lastName': _lName,
-          'gender':_gender,
-          'image':'n/a',
-          'about':'n/a'
-        })
-        .then((value) {
+    await FireCollection().userDoc().set({
+      'email': _email,
+      'firstName': _fName,
+      'lastName': _lName,
+      'gender': _gender,
+      'image': 'n/a',
+      'about': 'n/a'
+    }).then((value) {
       print('user data added successfully');
       Navigator.pushReplacementNamed(context, LoginPage.id);
-    })
-        .catchError((e) => print('error saving user data'));
+    }).catchError((e) => print('error saving user data'));
   }
 
   bool checkEmail(String email) {
