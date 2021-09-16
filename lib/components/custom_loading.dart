@@ -7,16 +7,16 @@ class CustomLoading extends StatefulWidget {
   _CustomLoadingState createState() => _CustomLoadingState();
 }
 
-class _CustomLoadingState extends State<CustomLoading> with TickerProviderStateMixin {
+class _CustomLoadingState extends State<CustomLoading>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SpinKitThreeBounce(
-        color: CustomColor.secColor,
+      child: SpinKitWave(
+        color: CustomColor.primaryColor,
         size: 30.0,
         controller: AnimationController(
-            vsync: this,
-            duration: const Duration(milliseconds: 1200)),
+            vsync: this, duration: const Duration(milliseconds: 1200)),
       ),
     );
   }

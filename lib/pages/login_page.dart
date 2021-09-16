@@ -350,6 +350,8 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
+    print("ACCESS TOKEN : ${googleSignInAuthentication.accessToken}");
+    print("ID TOKEN : ${googleSignInAuthentication.idToken}");
 
     //getting auth result from google and signing in with those credentials
     var authResult = await _auth.signInWithCredential(credential);
@@ -389,29 +391,20 @@ class _LoginPageState extends State<LoginPage> {
         print("Already Registered");
         Navigator.pushNamed(context, BottomBarPage.id);
       } else {
-
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(uid).set({
+        await FirebaseFirestore.instance.collection("users").doc(uid).set({
           'email': email,
           'firstName': firstName,
           'lastName': lastName,
-          'gender':'n/a',
-          'image':'n/a',
-          'about':'n/a'
-        })
-            .then((value) {
+          'gender': 'n/a',
+          'image': 'n/a',
+          'about': 'n/a'
+        }).then((value) {
           print('user data added successfully');
           Navigator.pushNamed(context, BottomBarPage.id);
-        })
-            .catchError((e) => print('error saving user data'));
-
-
+        }).catchError((e) => print('error saving user data'));
       }
     });
   }
-
-
 }
 
 class CustomClipPath extends CustomClipper<Path> {
