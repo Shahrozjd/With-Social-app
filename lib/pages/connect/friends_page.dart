@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
@@ -55,8 +57,12 @@ class _FriendsPageState extends State<FriendsPage> {
               padding: EdgeInsets.all(0),
               children: snapshot.data.docs.map(
                 (DocumentSnapshot document) {
+                  log(
+                    document['status'],
+                  );
                   return ProfileCard(
                     userId: document['friendId'],
+                    status: document['status'],
                   );
                 },
               ).toList(),
@@ -68,8 +74,11 @@ class _FriendsPageState extends State<FriendsPage> {
 
 class ProfileCard extends StatefulWidget {
   final String userId;
+  final String status;
+
   ProfileCard({
     this.userId,
+    this.status,
   });
 
   @override
@@ -114,6 +123,7 @@ class _ProfileCardState extends State<ProfileCard> {
     return Container(
       padding: EdgeInsets.all(10),
       height: 100,
+      margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -180,6 +190,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           color: Theme.of(context).primaryColor,
                           iconSize: 35,
                           onPressed: () {
+                            log(widget.status);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -188,6 +199,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                   recvremail: email,
                                   recvrimg: img,
                                   recvrname: name,
+                                  status: widget.status,
                                 ),
                               ),
                             );

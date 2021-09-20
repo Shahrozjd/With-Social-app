@@ -29,6 +29,7 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
 
   Future<void> checkIsFriend(String userId) async {
     isLoading = true;
+    print("Checking friend");
     CollectionReference collectionReference = FirebaseFirestore.instance
         .collection("users")
         .doc(FireCollection().userId)
@@ -40,17 +41,23 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
           (value) {
             if (value['friendId'] == userId) {
               setState(() {
+                print("Is friend");
                 isFriend = true;
                 isLoading = false;
               });
             }
           },
         );
+      } else {
+        print("Not friend");
+        isLoading = false;
       }
     });
   }
 
   Future<void> checkRequestExist(String userId) async {
+    isLoading = false;
+    print("Checking Request");
     CollectionReference collectionReference = FirebaseFirestore.instance
         .collection("users")
         .doc(FireCollection().userId)
@@ -63,10 +70,15 @@ class _UsersProfilePageState extends State<UsersProfilePage> {
             if (value['userId'] == userId) {
               setState(() {
                 isSent = true;
+                isLoading = false;
+                print("Is Request");
               });
             }
           },
         );
+      } else {
+        isLoading = false;
+        print('not request');
       }
     });
   }

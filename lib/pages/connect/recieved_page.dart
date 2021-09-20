@@ -142,24 +142,22 @@ class RecievedProfileCard extends StatelessWidget {
   }
 
   void acceptRequest(String friendId, String reqId, String sentId) async {
-    DocumentReference doc = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(FireCollection().userId)
         .collection('friends')
-        .doc();
-    doc.set({
+        .doc(friendId).set({
       'friendId': friendId,
-      'docId': doc.id,
+      'status': "active",
     });
 
-    DocumentReference doc1 = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(friendId)
         .collection('friends')
-        .doc();
-    doc1.set({
+        .doc(FireCollection().userId).set({
       'friendId': FireCollection().userId,
-      'docId': doc1.id,
+      'status': 'active',
     });
     rejectRequest(friendId, reqId, sentId);
   }

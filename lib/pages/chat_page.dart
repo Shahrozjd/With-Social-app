@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:with_app/components/round_rect_button.dart';
 import 'package:with_app/components/round_rect_button_custom.dart';
@@ -15,8 +16,15 @@ class chatscreen extends StatefulWidget {
   String recvremail;
   String recvrimg;
   String recvrname;
+  String status;
 
-  chatscreen({this.recvrId, this.recvremail, this.recvrname, this.recvrimg});
+  chatscreen({
+    this.recvrId,
+    this.recvremail,
+    this.recvrname,
+    this.recvrimg,
+    this.status,
+  });
 
   @override
   _chatscreenState createState() => _chatscreenState();
@@ -42,6 +50,50 @@ class _chatscreenState extends State<chatscreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.status == 'iBlocked') {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'You have blocked this user',
+                style: cTextStyleMediumBold,
+              ),
+              RoundRectButton(
+                text: 'Unblock',
+                height: 40,
+                onPress: () {
+                  unblockUser();
+                },
+              )
+            ],
+          ),
+        ),
+      );
+    }
+    if (widget.status == 'blocked') {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'You have been blocked by the user',
+                style: cTextStyleMediumBold,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
@@ -91,6 +143,39 @@ class _chatscreenState extends State<chatscreen> {
               )
             ],
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      height: Styles.height(context) * 0.2,
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "Are you sure you want to block the user?",
+                            style: cTextStyleMediumBold,
+                          ),
+                          RoundRectButton(
+                            text: 'Block',
+                            height: 40,
+                            onPress: () {
+                              blockUser();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: Icon(FontAwesome.block),
+            ),
+          ],
         ),
       ),
       body: Container(
@@ -178,6 +263,63 @@ class _chatscreenState extends State<chatscreen> {
         ),
       ),
     );
+  }
+
+  Future<void> blockUser() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FireCollection().userId)
+        .collection('friends')
+        .doc(widget.recvrId)
+        .update({
+      'status': "iBlocked",
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.recvrId)
+        .collection('friends')
+        .doc(FireCollection().userId)
+        .update({
+      'status': 'blocked',
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("User Blocked"),
+      ),
+    );
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  Future<void> unblockUser() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FireCollection().userId)
+        .collection('friends')
+        .doc(widget.recvrId)
+        .update({
+      'status': "active",
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.recvrId)
+        .collection('friends')
+        .doc(FireCollection().userId)
+        .update({
+      'status': 'active',
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("User Unblock Successfully"),
+      ),
+    );
+
+    Navigator.pop(context);
   }
 
   Future<void> sendtext({String text}) async {

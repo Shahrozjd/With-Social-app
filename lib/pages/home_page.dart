@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
@@ -67,9 +68,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void getPermissions()async{
+  void getPermissions() async {
     var permission = Permission.location;
-
 
     var permissionStatus = await permission.request();
 
@@ -84,7 +84,6 @@ class _HomePageState extends State<HomePage> {
         " isPermanentlyDenied: " +
         permissionStatus.isPermanentlyDenied.toString());
   }
-
 
   @override
   void initState() {
@@ -105,12 +104,20 @@ class _HomePageState extends State<HomePage> {
 
   void setCustomMapPin() async {
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/images/user_location.png');
+      ImageConfiguration(devicePixelRatio: 2.5),
+      'assets/images/user_location.png',
+    );
 
-    postLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/images/user_marker.png');
+    if (Platform.isIOS) {
+      postLocationIcon = await BitmapDescriptor.fromAssetImage(
+          ImageConfiguration(devicePixelRatio: 2.5),
+          'assets/images/user_marker_iphone.png');
+    }
+    if (Platform.isAndroid) {
+      postLocationIcon = await BitmapDescriptor.fromAssetImage(
+          ImageConfiguration(devicePixelRatio: 2.5),
+          'assets/images/user_marker_android.png');
+    }
   }
 
   @override
@@ -127,6 +134,8 @@ class _HomePageState extends State<HomePage> {
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
               markers: _markers,
+              zoomControlsEnabled: true,
+              zoomGesturesEnabled: true,
             ),
             MapOverlay(
               onRelocateTap: moveCameraToMyLocation,
@@ -159,7 +168,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  initMarkers(doc, docId,BuildContext context) {
+  initMarkers(doc, docId, BuildContext context) {
     double lat = doc['lat'];
     double lng = doc['lng'];
     LatLng postPosition = LatLng(lat, lng);
@@ -241,9 +250,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     doc['desc'] != null
                         ? AutoSizeText(
-                          doc['desc'].toString(),
-                          maxLines: 2,
-                        )
+                            doc['desc'].toString(),
+                            maxLines: 2,
+                          )
                         : SizedBox(),
                     SizedBox(
                       width: Styles.width(context) * 0.01,
@@ -300,12 +309,13 @@ class _HomePageState extends State<HomePage> {
 
   void _getUserLocation() async {
     var position = await geoLocator.GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: geoLocator.LocationAccuracy.bestForNavigation);
+        .getCurrentPosition(
+            desiredAccuracy: geoLocator.LocationAccuracy.bestForNavigation);
 
     setState(() {
       double userLat = position.latitude;
       double userLng = position.longitude;
-      _initialCameraPosition = LatLng(userLat,userLng);
+      _initialCameraPosition = LatLng(userLat, userLng);
       print("These are coordinates: $userLat $userLng");
     });
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -139,6 +140,11 @@ class _AddPageState extends State<AddPage> {
                               SizedBox(
                                 height: Styles.height(context) * 0.01,
                               ),
+                              AutoSizeText(
+                                "Which gender can see your post?",
+                                style: cTextStyleMedium,
+                                maxLines: 1,
+                              ),
                               Container(
                                 height: Styles.height(context) * 0.1,
                                 decoration: BoxDecoration(
@@ -183,7 +189,7 @@ class _AddPageState extends State<AddPage> {
                                 height: 50,
                                 backgroundColor: CustomColor.primaryColor,
                                 child: Text(
-                                  "Save",
+                                  "Add Post",
                                   style: cTextStyleMedium,
                                 ),
                                 onPress: () {
@@ -234,6 +240,11 @@ class _AddPageState extends State<AddPage> {
                               SizedBox(
                                 height: Styles.height(context) * 0.01,
                               ),
+                              AutoSizeText(
+                                "Which gender can see your post?",
+                                style: cTextStyleMedium,
+                                maxLines: 1,
+                              ),
                               Container(
                                 height: Styles.height(context) * 0.1,
                                 decoration: BoxDecoration(
@@ -278,7 +289,7 @@ class _AddPageState extends State<AddPage> {
                                 height: 50,
                                 backgroundColor: CustomColor.primaryColor,
                                 child: Text(
-                                  "Save",
+                                  "Add Post",
                                   style: cTextStyleMedium,
                                 ),
                                 onPress: () {
